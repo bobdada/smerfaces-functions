@@ -1,6 +1,9 @@
-import * as functions from "firebase-functions";
+// import * as functions from "firebase-functions";
 
 const admin = require("firebase-admin");
+
+import { vendorGroup } from "./vendor";
+// import { userGroup } from "./user";
 
 admin.initializeApp({
   private_key:
@@ -9,7 +12,67 @@ admin.initializeApp({
   databaseURL: "https://smerafaces.firebaseio.com",
 });
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", { structuredData: true });
-  response.send("Hello from Firebase!");
-});
+exports.vendorTriggers = vendorGroup;
+// exports.userTriggers = userGroup;
+
+export function response(status: boolean, message: any) {
+  return {
+    success: status,
+    data: message,
+  };
+}
+
+// exports.isPhoneNumberUsed = functions.https.onCall(async (snap, context) => {
+//   const phoneNumber = snap.phoneNumber;
+//   if (!phoneNumber)
+//     return {
+//       success: false,
+//       error: "phoneNumber is mandatory",
+//     };
+//   try {
+//     await admin.auth().getUserByPhoneNumber(phoneNumber);
+//     return {
+//       success: true,
+//       phoneNumber,
+//       isAvailable: false,
+//     };
+//   } catch (e) {
+//     return {
+//       success: true,
+//       phoneNumber,
+//       isAvailable: true,
+//     };
+//   }
+// });
+
+// createVendorUser: functions.https.onCall(async (data, context) => {
+//   if (context.auth!.token.super_admin === false) {
+//     return {
+//       success: false,
+//       error: "You are not authorized to do this action.",
+//     };
+//   }
+
+//   try {
+//     const uid = data.userId;
+
+//     await admin.auth().setCustomUserClaims(uid, {
+//       admin: true,
+//     });
+
+//     return {
+//       success: true,
+//       message:
+//         "User " +
+//         uid +
+//         " has been added as admin for company" +
+//         data.companyId,
+//     };
+//   } catch (e) {
+//     console.log("ERRORRRRRR", e);
+//     return {
+//       success: false,
+//       error: e.message,
+//     };
+//   }
+// }),
